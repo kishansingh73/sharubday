@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #ffe6e6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            background-color: #ff9999;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .birthday-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff3366;
+            margin: 10px 0;
+        }
+        .video-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-height: 80vh;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        video {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .button-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #ff3366;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button-container button:hover {
+            background-color: #e62e5d;
+        }
+        .play-button {
+            margin-top: 20px;
+        }
+        .play-button button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #ff3366;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .play-button button:hover {
+            background-color: #e62e5d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Happy Birthday, My Love!</h1>
+        <p>Wishing you the happiest birthday and all the love in the world.</p>
+    </header>
+
+    <div class="video-container">
+        <video autoplay muted controls loop>
+            <source src="./media/birthday.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="button-container" id="buttonContainer">
+        <button onclick="goToNextPage()">Birthday Message</button>
+    </div>
+
+    <div class="play-button">
+        <button onclick="playAudio()">Play Song</button>
+        <audio id="birthdayAudio" src="./media/bday_song.mp3" loop></audio>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.onload = playAudio()
+        // Enhanced confetti animation on page load
+        window.onload = function() {
+            const duration = 20 * 1000; // 10 seconds
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 7,
+                    angle: 60,
+                    spread: 100,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 7,
+                    angle: 120,
+                    spread: 100,
+                    origin: { x: 1 }
+                });
+                confetti({
+                    particleCount: 7,
+                    angle: -90,
+                    spread: 100,
+                    origin: { x: 0.5, y: -0.5 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                } else {
+                    showButton();
+                }
+            }());
+        };
+
+        // Play audio function
+        function playAudio() {
+            console.log("playing audio")
+            const audio = document.getElementById("birthdayAudio");
+            audio.play();
+        }
+
+        // Hide content and show the button
+        function showButton() {
+            document.querySelector("header").style.display = "none";
+            document.querySelector(".video-container").style.display = "none";
+            document.getElementById("buttonContainer").style.display = "block";
+        }
+
+        // Navigate to the next page
+        function goToNextPage() {
+            window.location.href = "next_pg.html"; // Replace with the actual URL of the next page
+        }
+    </script>
+</body>
+</html>

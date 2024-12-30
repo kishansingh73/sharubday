@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Slideshow</title>
+    <style>
+          body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #ffe6e6;
+    overflow: hidden;
+    position: relative;
+    height: 100vh; /* Full height for the body */
+}
+
+header {
+    background-color: #ff9999;
+    color: white;
+    padding: 10px 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Fixed-size slideshow container */
+.slideshow-container {
+    background-color: #ffe6e6;
+    position: absolute; /* Absolute positioning for centering */
+    width: 600px; /* Fixed width */
+    height: 600px; /* Fixed height */
+    top: 50%; /* Vertically center */
+    left: 50%; /* Horizontally center */
+    transform: translate(-50%, -50%); /* Adjust to exactly center */
+    border-radius: 10px;
+    overflow: hidden;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+}
+
+/* Each slide should be centered inside the container */
+.slides {
+    display: none;
+    position: relative;
+    width: 100%; /* Make slide container take the full width */
+    height: 100%; /* Ensure it takes the full height of the container */
+    text-align: center; /* Center the content inside */
+}
+
+/* Image properties to ensure it maintains aspect ratio and fits the container */
+.slides img {
+    width: 100%; /* Image will take the full width of the container */
+    height: 100%; /* Make image fill the container's height */
+    object-fit: contain; /* This ensures the image fits inside without distortion */
+    display: block; /* Ensure the image is displayed as a block */
+    margin: 0 auto; /* Horizontally center the image */
+}
+
+.slides .text {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.heart {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ff3366;
+    transform: rotate(-45deg);
+    animation: floatUp 5s linear infinite;
+    border-radius: 50% 50% 0 0;
+    z-index: 1000;
+}
+
+.heart::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ff3366;
+    border-radius: 50%;
+    top: -25px;
+    left: 0;
+}
+
+.heart::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ff3366;
+    border-radius: 50%;
+    top: 0;
+    left: -25px;
+}
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1001; /* On top of other content */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    overflow: auto;
+    padding-top: 100px; /* Center the modal */
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Set the modal width */
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Modal buttons */
+.modal-content button {
+    background-color: #ff3366; /* Pink button color */
+    color: white;
+    padding: 15px 32px;
+    margin: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #ff6699; /* Lighter pink on hover */
+}
+
+.modal-content h2 {
+    color: #333;
+    font-size: 20px;
+}
+
+/* Marquee text styling */
+.marquee-container {
+            position: fixed;
+            top: 50px; /* Adjust so it appears below the header */
+            left: 0;
+            width: 100%;
+            background-color: #ff9999; /* Same color as the header for consistency */
+            padding: 5px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .marquee-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+        }
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotate(-45deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh) rotate(-45deg);
+    }
+}
+
+.dot-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+    background-color: #717171;
+}
+.prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 10px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .prev {
+            left: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        
+
+        
+        
+    </style>
+</head>
+<body>
+    <header>
+        <a href="javascript:void(0);" onclick="headerClicked()" style="color: white; text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h1>Happy Birthday, My Love!</h1>
+        </a>
+    </header>
+
+    <!-- Marquee text below the header -->
+    <div class="marquee-container">
+        <div class="marquee-text">
+            Shiknu💗 meri jaan here are 23 reasons why I am grateful and very happy that your parents were "in the mood" that day. Thanx to them I have the priviledge to call you my girlfriend 💗  (There is hidden msg. hint: try clicking other than the arrows)
+        </div>
+    </div>
+
+    <div class="slideshow-container">
+        <div class="slides">
+            <img src="./media/1.jpeg" alt="Picture 1">
+            <div class="text">1. You are CRAZY HOT 🥵 and the perfect example of beauty with brains. This was the first tym you sent me your pic and u had me since that day</div>
+        </div>
+        <div class="slides">
+            <img src="./media/2.jpeg" alt="Picture 2">
+            <div class="text">2. You are very pure at HEART meri jaan. This is the most attractive part of u meri jaan. This was our first date at malpe. Ek earphone dilade bro 🤓</div>
+        </div>
+        <div class="slides">
+            <img src="./media/3.jpeg" alt="Picture 2">
+            <div class="text">3. Your VIBE 💃. That's it nothing more. Its so fun to be around you. Besharam mera earphone duba ke bhi hass rahi hai </div>
+        </div>
+        <div class="slides">
+            <img src="./media/4.jpeg" alt="Picture 2">
+            <div class="text">4. Your COMFORT 😴. Tere around it feels like home. I have never been so open and comfortable with any1 ever. Kitni sundar dikh rahi iss pic mei dekh motuuuuu🤤</div>
+        </div>
+        <div class="slides">
+            <img src="./media/5.jpeg" alt="Picture 1">
+            <div class="text">5. Your Extrovertness 😎. The way you handle yourself around ppl and present urself makes me horny and I learn alot about these things from you. Shawty be taking me to clubs and all 🥳</div>
+        </div>
+        <div class="slides">
+            <img src="./media/6.jpeg" alt="Picture 2">
+            <div class="text">6. Your EVENT MANAGEMENT 🥸 skills. Matlab tere saath ek bhi second boring nhi hota. Tu kar leti hai bass kaise toh. U make things so fun bro thanx for making my boring life fun</div>
+        </div>
+        <div class="slides">
+            <img src="./media/7.jpeg" alt="Picture 2">
+            <div class="text">7. I can talk to you about anything and everything, and it feels so easy. Matlab the comfort of talking what i want makes me feel at home with you. 🥰</div>
+        </div>
+        <div class="slides">
+            <img src="./media/8.jpeg" alt="Picture 2">
+            <div class="text">8. Every moment spent with you feels like a beautiful memory in the making. Specially our beach dates. we are a beach couple innit? Bahot dataes gaye apan beaches pe 🌊</div>
+        </div>
+        <div class="slides">
+            <img src="./media/9.jpeg" alt="Picture 1">
+            <div class="text">9. Tera sense of humor thoda chutiya hai ngl but its infectious. I love laughing with you babe.😭 Didn't think I would ever say this to a girl</div>
+        </div>
+        <div class="slides">
+            <img src="./media/10.jpeg" alt="Picture 2">
+            <div class="text">10. Your voice is so comforting🎶, its like a melody that calms my soul. Matlab not even kiddin when i say U are the best voice I have ever heard on mic. period</div>
+        </div>
+        <div class="slides">
+            <img src="./media/11.jpeg" alt="Picture 2">
+            <div class="text">11. You make the ordinary moments extraordinary, just by being yourself. Hamesha aise hi rehna bro. Just be urself I Love You babeee😘 </div>
+        </div>
+        <div class="slides">
+            <img src="./media/12.jpeg" alt="Picture 2">
+            <div class="text">12. You make me feel like I am exactly where I am supposed to be. Tere saath I never feel like I am doing something wrong I never have guilt with you meri jaan 🥺</div>
+        </div>
+        <div class="slides">
+            <img src="./media/13.jpeg" alt="Picture 1">
+            <div class="text">13. You are my first love, and that makes everything with you so special. Uff teri badi badi hirni jaisi aakhein shiknis. AAAH 💦</div>
+        </div>
+        <div class="slides">
+            <img src="./media/14.jpeg" alt="Picture 2">
+            <div class="text">14. Tum bakchod ho. and I LOVE BAKCHOD. shiknuu stay bakchod meri jaaneman 🤓</div>
+        </div>
+        <div class="slides">
+            <img src="./media/15.jpeg" alt="Picture 2">
+            <div class="text">15. You love me just the way I wanted to be loved. Its like bhagwaan ne sunn li meri. Aise matt dekh pagli pyaar hojayega 🤭</div>
+        </div>
+        <div class="slides">
+            <img src="./media/16.jpeg" alt="Picture 2">
+            <div class="text">16. The happy you makes me feel something something shiknuu. If you ever want me to make feel happy just smile at me and be happy mai khush hojaunga 🥹</div>
+        </div>
+        <div class="slides">
+            <img src="./media/17.jpeg" alt="Picture 1">
+            <div class="text">17. You make me feel worth it. Tu thoda zyaada hi bhaav deti hai mujhe u put me on a pedestal mujhe thoda sharam toh aati hai. Ab mai itna bhi kuch khaas nhi bro 🫣</div>
+        </div>
+        <div class="slides">
+            <img src="./media/18.jpeg" alt="Picture 2">
+            <div class="text">18. Loving you is effortless. 😌 kabhi kabhi gussa aata hai teri harkato par. but letting it all go is too easy for me because you are too lovable and cute to be angry with</div>
+        </div>
+        <div class="slides">
+            <img src="./media/19.jpeg" alt="Picture 2">
+            <div class="text">19. Again.... teri hirni jaisi aakho pe dil haar baithe sanam 👁️👁️</div>
+        </div>
+        <div class="slides">
+            <img src="./media/20.jpeg" alt="Picture 2">
+            <div class="text">20. You are the perfect blend of harami and sanskari. matlab tujhe The Edge bhi le jaa sakte hai aur krishna mandir bhi. And u perfectly blend in</div>
+        </div>
+        <div class="slides">
+            <img src="./media/21.jpeg" alt="Picture 1">
+            <div class="text">21. This is the pic where it all began. This honey trap is where my ashiq phase actually began. Those dimple below ur lips made me stay awake till 3am in the night and travel so long to meet you. aaaahhhhhhh😩</div>
+        </div>
+        <div class="slides">
+            <img src="./media/22.jpeg" alt="Picture 2">
+            <div class="text">22. Ok now this is a bias. You are my first kiss so ofc you will forever be special to me. I'll always remember those lips and this spot shiknuu 😋</div>
+        </div>
+        <div class="slides">
+            <img src="./media/23.jpeg" alt="Picture 2">
+            <div class="text">23. Mera chota don. hai piddi si par attitude hai 7ft valo jaisa. tu vibe hai bro. tu bakchod hai bro. never doubt yourself ever meri jaan you are the best girlfriend a man can ever ask for meri jaanu 😌</div>
+        </div>
+        
+        <!-- Add up to 23 slides similarly -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <div class="dot-container">
+        <!-- Dynamically generated dots -->
+    </div>
+    <div id="customAlert" class="modal">
+        <div class="modal-content">
+            <h2>Would you like to hear a song?</h2>
+            <button onclick="playSong()">OK</button>
+            <button onclick="cancelSong()">Cancel</button>
+        </div>
+    </div>
+
+    <audio id="birthdaySong" src="./media/ish.mp3" loop></audio>
+
+    <script>
+        // Slideshow functionality
+
+        window.onload = function() {
+        document.getElementById("customAlert").style.display = "block";
+    };
+        let slideIndex = 1;
+        const slides = document.getElementsByClassName("slides");
+        const dotsContainer = document.querySelector(".dot-container");
+
+        function showSlides() {
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            // slideIndex++;
+            console.log('slide increment '+slideIndex)
+            if (slideIndex > slides.length) { slideIndex = 1; }
+            slides[slideIndex - 1].style.display = "block";
+
+            // Highlight the active dot
+            const dots = dotsContainer.getElementsByClassName("dot");
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            dots[slideIndex - 1].className += " active";
+
+            // setTimeout(showSlides, 10000); // Change image every 5 seconds
+        }
+
+        function plusSlides(n) {
+            console.log("n"+n)
+            console.log("slideIndex "+slideIndex)
+            slideIndex += n; // Adjust index by n
+            console.log("slideIndex",slideIndex)
+            if (slideIndex >= 24) {
+                slideIndex = 1; // Loop back to the first slide (index 0)
+            } else if (slideIndex < 0) {
+                slideIndex = 23; // Loop back to the last slide (index 23)
+            }
+            showSlides();
+}
+        function createDots() {
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement("span");
+                dot.className = "dot";
+                dot.onclick = function () {
+                    slideIndex = i;
+                    showSlides();
+                };
+                dotsContainer.appendChild(dot);
+            }
+        }
+        function playSong() {
+        var song = document.getElementById("birthdaySong");
+        song.play();
+        closeAlert(); // Close the alert after playing the song
+    }
+
+    // Do nothing when the user clicks Cancel
+    function cancelSong() {
+        closeAlert(); // Close the alert without playing the song
+    }
+
+    // Function to close the custom alert
+    function closeAlert() {
+        var modal = document.getElementById("customAlert");
+        modal.style.display = "none";
+    }
+    function headerClicked(){
+        alert("Ohoo smarty dhoond liyaa!!! Happy birthday meri jaaneman. Shiknis wish you the best year ahead meri jaan. May all your wishes come true this year and you be the happiest. You are the best thing that happened to me in 2024 and may our 2025 together be filled with alot of success. May you get everything and more than what you wish for meri cutie. I love you alot and will always be by your side. just trust me and let urself go. meri jaan we are in this together and we will be the best versions of ourselves this year OK?")
+    }
+
+        createDots();
+        showSlides();
+
+        // Hearts popping
+        setInterval(() => {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.bottom = "0";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, 2000);
+    </script>
+</body>
+</html>
